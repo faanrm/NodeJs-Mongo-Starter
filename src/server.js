@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 mongo().then(() => {
     // MongoDB connected, start the server
     app.listen(port, () => {
-      console.log("Server running on port:", port);
+      console.log(`Server is running and listening on http://localhost:${port}`);
     });
   }).catch((err) => {
     console.error("Error connecting to MongoDB:", err);
