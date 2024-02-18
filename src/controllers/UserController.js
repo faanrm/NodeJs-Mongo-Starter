@@ -1,15 +1,19 @@
-import generateToken from "../helpers/generateToken";
-import User from "../models/UserModels";
-
+import {generateToken} from "../helpers/generateToken.js";
+import User from "../models/UserModels.js";
+import bcrypt from "bcrypt"
 export const createUser = async (req, res) => {
     try {
         const { name, email, password, confirmPassword } = req.body;
 
+        if(password === confirmPassword){
+            console.log(password , confirmPassword);
+        }
         // Check if passwords match
         if (password !== confirmPassword) {
             return res.status(400).json({ message: "Passwords do not match" });
+        
         }
-
+       
         // Check if the user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -41,22 +45,36 @@ export const createUser = async (req, res) => {
 
 export const getUser = async (req, res) => {
     try {
-        const User = User.findAll()
-            .then((userData) => {
-                res.status(200).json(userData)
-            })
+        const users = await User.find()
+        res.status(200).json({
+            message : "list all user",
+            data : users
+        })
     } catch (error) {
-        res.status(error.status).json({ message: error.message })
+        res.status(500).json({ message: error.message })
     }
 }
 
 export const deletUser = async (req, res) => {
     const { id } = req.params
     try {
-
+        User.findById(id).then((user)=>{
+            if(!user){
+                const error = new Error ('No user with this ID')
+                error.status=404
+                throw error
+            }
+            return User.findByIdAndDelete(id)
+        })
+        .then((result)=> {
+            res.status(200).json({
+                message :"USER deleted",
+                data :result
+            })
+        })
 
     } catch (error) {
-
+        next(error)
     }
 }
 

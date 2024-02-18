@@ -3,7 +3,7 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-export default generateToken = (user) => {
+export const generateToken = (user) => {
     const payload = {
         userId: user._id,
         email: user.email,
