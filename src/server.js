@@ -2,6 +2,7 @@ import express from "express"
 import dotenv from "dotenv"
 import mongo from "./config/mongo.js"
 import  userRoutes from "./routes/UserRoutes.js"
+import authRoutes from "./routes/AuthRoutes.js"
 import bodyParser from "body-parser"
 dotenv.config()
 const app = express()
@@ -14,7 +15,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api',userRoutes)
-
+app.use('/api',authRoutes)
 // Connect to MongoDB
 mongo().then(() => {
     // MongoDB connected, start the server
